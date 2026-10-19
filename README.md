@@ -16,8 +16,6 @@ macOS has one default route and one system proxy switch. When a server VPN, a cl
 
 ProxyRouter decides **per application, at the moment a connection is created**, which path it takes. Several VPNs and proxies stay up together and every app uses its own.
 
-![Choosing a path for one app: a proxy, a VPN tunnel or Block](docs/choose-path.png)
-
 Typical layout:
 
 | App | Path |
