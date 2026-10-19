@@ -1,5 +1,7 @@
 # ProxyRouter for macOS
 
+**English** · [简体中文](README.zh-CN.md) · [Русский](README.ru.md)
+
 **A local per-app proxy router for Mac.** Give each application its own network path: one app through a SOCKS5/HTTP proxy, another through a VPN tunnel, the rest direct, or blocked. All at the same time, no switching.
 
 **Website and download: <https://proxyrouter.app>**
