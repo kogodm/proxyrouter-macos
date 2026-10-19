@@ -38,8 +38,30 @@ Step-by-step guide: [Use several VPNs and proxies at once](https://proxyrouter.a
 - **Block rules.** Close an app's connections outright and still see the blocked attempts.
 - **Automatic profile switching per network.** Wi-Fi by SSID, wired by gateway MAC plus subnet.
 - **Explainable connections.** Every connection shows which rule matched and why, and a dry-run tester answers the same question without sending a packet.
-- **Leak protection.** WebRTC/UDP and DNS leak handling, and a proxy-chain DNS check.
+- **Leak protection.** WebRTC/UDP and DNS leak handling, and a [DNS check](#dns-check-does-your-dns-match-your-exit) that compares your DNS resolver with your network exit.
 - **Automation.** `proxyrouterctl` CLI, URL scheme, App Intents and a built-in MCP server for LLM agents.
+
+## DNS check: does your DNS match your exit?
+
+A proxy can hide your IP and still leak where you are through DNS. If your traffic exits in the United States but the DNS queries behind it are answered by a resolver in Singapore, or back in your own country, sites and DNS operators see two different locations. ProxyRouter checks exactly this, **whether the DNS resolver that answers your queries is in the same place as your network exit**, and tells you on the Proxy page, under each proxy.
+
+![DNS check result under a proxy: proxy-chain DNS in Singapore, current node in the United States](docs/dns-check.png)
+
+It reports three separate observations, so you can tell where a problem comes from:
+
+1. **Local DNS.** A random-name lookup that does not go through the proxy, as a baseline for your own network.
+2. **Proxy-chain DNS.** The same kind of lookup handed to your proxy. If the proxy is `127.0.0.1` (for example Clash or Mihomo), this is the final behavior of the whole chain behind it.
+3. **Current node exit.** The public exit you get through the same proxy chain.
+
+Result:
+
+- **Clean.** The resolver and the exit agree.
+- **Location mismatch.** The resolver is in a different country from the exit, but it is not your real location.
+- **Leak.** The resolver, or the client subnet it forwards, points back to your own network while the exit is abroad.
+
+How it works: ProxyRouter generates a random, never-seen subdomain and hands the **name itself** to the proxy, so nothing is resolved locally. The authoritative DNS server records which resolver asked, and ProxyRouter compares that resolver's location with the exit's. When the proxy entry is on `127.0.0.1`, a bad result is attributed to the local proxy client's DNS settings, not blamed on the remote server.
+
+It runs automatically when you open the Proxy page (results are cached for 30 minutes). Click the line, use the right-click menu, or "Test all" to run it again. From the terminal: `proxyrouterctl proxy dns-check [name]` (add `--json` for scripts). LLM agents can call the read-only MCP tool `check_proxy_dns`.
 
 ## What it is not
 
