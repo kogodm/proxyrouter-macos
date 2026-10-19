@@ -50,7 +50,51 @@ macOS 13 or later, Apple Silicon and Intel. Details: [system requirements](https
 
 ## Install
 
-Download the DMG from <https://proxyrouter.app/download>. It is signed with a Developer ID certificate, notarized by Apple, and updates itself through Sparkle. A free trial with all features is available, no card required.
+### One command
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/kogodm/proxyrouter-macos/main/install.sh | bash
+```
+
+The script ([`install.sh`](install.sh), short enough to read first) does this:
+
+1. Downloads the current release DMG from `https://proxyrouter.app/downloads/ProxyRouter.dmg` over HTTPS.
+2. Mounts it read-only and checks that the code signature is valid, that the bundle id is `com.proxyrouter.app`, that the signing team is the expected one, and that Gatekeeper accepts the app (notarized). If any check fails, nothing is installed.
+3. Copies `ProxyRouter.app` to `/Applications` and opens it.
+
+Options, for a downloaded copy of the script:
+
+```sh
+./install.sh --dir ~/Applications   # install somewhere else
+./install.sh --dmg ~/Downloads/ProxyRouter.dmg   # use a DMG you already have
+./install.sh --no-open              # do not launch afterwards
+./install.sh --force                # replace even if ProxyRouter is running
+```
+
+If `/Applications` is not writable for your account, use `--dir ~/Applications` or run with `sudo`. The script refuses to replace a running app: quit ProxyRouter first. Once installed, the app updates itself in-app, so you do not need to run the script again.
+
+### Manual
+
+Download the DMG from <https://proxyrouter.app/download>, open it, and drag **ProxyRouter** to Applications. It is signed with a Developer ID certificate and notarized by Apple.
+
+A free trial with all features is available, no card required.
+
+## First launch
+
+1. Open ProxyRouter. macOS asks you to allow its network system extension. Approve it once.
+2. If macOS asks to allow a DNS proxy configuration, click **Allow**.
+3. The sidebar toggle at the bottom shows **Running** when routing is active.
+
+## Use
+
+1. **Proxy page.** Add your SOCKS5 or HTTP upstream (a local Clash port, a corporate gateway). Connected VPN tunnels appear under **VPN tunnels (detected automatically)**.
+2. **Apps page.** For each app, open the path menu and choose a proxy, a VPN tunnel, or **Block**. An app with nothing chosen connects directly.
+3. **Activity page.** Check the result: every connection shows the path it took and the rule that matched.
+4. **Profile page.** Bind a profile to a network (Wi-Fi SSID, or wired gateway) so it applies automatically there.
+
+An app pinned to a VPN reaches only what that VPN routes. If the VPN only pushes internal routes, the app's connections to public addresses fail instead of leaking, and if the VPN drops, the app's connections fail rather than taking another path.
+
+Scripting and automation: `proxyrouterctl` CLI, URL scheme, App Intents and the built-in MCP server. See <https://proxyrouter.app>.
 
 ## Guides
 
