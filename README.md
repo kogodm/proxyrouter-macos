@@ -35,11 +35,25 @@ Step-by-step guide: [Use several VPNs and proxies at once](https://proxyrouter.a
 - **Per-app routing** over SOCKS5 or HTTP upstreams. Pick apps by icon, no process names to type.
 - **VPN tunnels detected automatically.** Once a VPN is connected, it shows up as a choice for any app.
 - **UDP and QUIC.** SOCKS5 UDP ASSOCIATE, and QUIC with three explicit states: proxy it, force fallback to TCP, or go direct.
+- **See every address each app connects to.** The Activity page lists, per app, all the hosts it talks to, live. See [below](#see-every-address-each-app-connects-to).
 - **Block rules.** Close an app's connections outright and still see the blocked attempts.
 - **Automatic profile switching per network.** Wi-Fi by SSID, wired by gateway MAC plus subnet.
 - **Explainable connections.** Every connection shows which rule matched and why, and a dry-run tester answers the same question without sending a packet.
 - **Leak protection.** WebRTC/UDP and DNS leak handling, and a [DNS check](#dns-check-does-your-dns-match-your-exit) that compares your DNS resolver with your network exit.
 - **Automation.** `proxyrouterctl` CLI, URL scheme, App Intents and a built-in MCP server for LLM agents.
+
+## See every address each app connects to
+
+Not sure what an app is talking to? Open the **Activity** page. **By App** groups connections per application, and each app expands into the full list of hosts it has connected to. **Live** shows connections as they happen, and the search box filters by app or host.
+
+![Activity page: every host that ChatGPT and Claude connect to, with a one-click Add to Proxy](docs/activity.png)
+
+- Each app carries its current state (**Direct**, **Proxied**), so you can see at a glance which apps are leaving your Mac without a proxy.
+- Every host has an **Add to Proxy** button: found an address that should go through the proxy? One click and it does.
+- An app that is still direct has a **Route via Proxy** button: one click moves the whole app.
+- Each connection can be expanded to show which rule matched and why. A blocked app still lists its blocked attempts, so you can see where it was going.
+
+Useful for finding what an AI tool, an updater or an unknown background process actually contacts, before you decide where it should go.
 
 ## DNS check: does your DNS match your exit?
 
